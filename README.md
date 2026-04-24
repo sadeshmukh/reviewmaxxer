@@ -2,7 +2,9 @@
 
 A bot to help me reviewmaxx. I get notified on my phone and in Slack for each new review available.
 
-## How 2 Use
+Are you a reviewer? For a Limited Time Only™ you may try it out with code free-trial-horizons-reviewmaxxing-limited-time-only-123456789 with the ntfy.sh app.
+
+## How 2 Run @ Home
 
 1. Clone the repo
 
