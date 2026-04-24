@@ -15,3 +15,5 @@ Are you a reviewer? For a Limited Time Only™ you may try it out with code free
 3. `uv sync && uv run main.py`
 
 4. Profit?!
+
+No AI was used in this project.
