@@ -29,12 +29,12 @@ async def notify_slack(item):
     ping_text = f"Hey {_env('PING')}, " if _env("PING") else ""
     await app.client.chat_postMessage(
         channel=_env("NOTIFY_CHANNEL"),
-        text=f"{ping_text} https://horizons.hackclub.com/admin/review/{item['submissionId']}",
+        text=f"{ping_text} https://horizons.hackclub.com/admin/review/{item.get('project', {}).get('projectId')}",
     )
 
 
 async def notify_ntfy(item):
-    review_url = f"https://horizons.hackclub.com/admin/review/{item['submissionId']}"
+    review_url = f"https://horizons.hackclub.com/admin/review/{item.get('project', {}).get('projectId')}"
     headers = {
         "Title": f"New {item.get('project', {}).get('projectType', 'UH OH')} submission",
         # TBD tags
@@ -50,7 +50,7 @@ async def notify_ntfy(item):
 
 
 async def notify(item):
-    logging.info(f"[cleared]: {item['submissionId']}")
+    logging.info(f"[cleared]: {item.get('project', {}).get('projectId')}")
     await notify_slack(item)
     await notify_ntfy(item)
 
@@ -72,9 +72,9 @@ async def refresh_cleared():
         ) as res:
             data = await res.json()
             for item in data:
-                if item["submissionId"] not in cleared:
+                if item.get("project", {}).get("projectId") not in cleared:
                     await notify(item)
-                    cleared = [i.get("submissionId") for i in data]
+                    cleared = [i.get("project", {}).get("projectId") for i in data]
                     await serialize_cleared()
 
 
@@ -97,5 +97,5 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
     # asyncio.run(
-    #     notify_ntfy({"submissionId": "test", "project": {"projectType": "Test"}})
+    #     notify_ntfy({"project": {"projectType": "Test", "projectId": 123}}})
     # )
