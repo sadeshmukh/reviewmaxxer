@@ -71,11 +71,18 @@ async def refresh_cleared():
             f"https://horizons.hackclub.com/api/reviewer/queue"
         ) as res:
             data = await res.json()
+            if len(data) - len(cleared) > 5:
+                logging.warning(
+                    f"Cleared list is very out of date! {len(cleared)} cleared but {len(data)}?! projects to review"
+                )
+                await notify(data[0])
+                await serialize_cleared()
+                return
             for item in data:
                 if item.get("project", {}).get("projectId") not in cleared:
                     await notify(item)
-                    cleared = [i.get("project", {}).get("projectId") for i in data]
-                    await serialize_cleared()
+            cleared = [i.get("project", {}).get("projectId") for i in data]
+            await serialize_cleared()
 
 
 async def periodic():
