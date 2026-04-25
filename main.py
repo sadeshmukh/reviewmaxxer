@@ -76,6 +76,7 @@ async def refresh_cleared():
                     f"Cleared list is very out of date! {len(cleared)} cleared but {len(data)}?! projects to review"
                 )
                 await notify(data[0])
+                cleared = [i.get("project", {}).get("projectId") for i in data]
                 await serialize_cleared()
                 return
             for item in data:
